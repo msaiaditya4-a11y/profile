@@ -1,113 +1,142 @@
-const apiKey = "4a8e85d21c8f719d360b23ddd27b432b";
+const taskInput = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
+const taskList = document.getElementById("taskList");
+const clearBtn = document.getElementById("clearBtn");
+const count = document.getElementById("count");
 
-const cityInput = document.getElementById("city");
-const searchBtn = document.getElementById("searchBtn");
+// Load tasks when page opens
+window.onload = loadTasks;
 
-async function getWeather(city){
+// Add task
+addBtn.addEventListener("click", addTask);
 
-    const url=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+// Press Enter to add task
+taskInput.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        addTask();
+    }
+});
 
-    try{
+// Clear all tasks
+clearBtn.addEventListener("click", function(){
 
-        const response=await fetch(url);
-        const data=await response.json();
-
-        if(data.cod!=200){
-
-            document.querySelector(".weather").style.display="none";
-            document.getElementById("error").style.display="block";
-            document.getElementById("error").innerHTML=data.message;
-
-            return;
-
-        }
-
-        document.getElementById("error").style.display="none";
-        document.querySelector(".weather").style.display="block";
-
-        document.getElementById("cityName").innerHTML=data.name;
-
-        document.getElementById("temperature").innerHTML=
-        Math.round(data.main.temp)+"°C";
-
-        document.getElementById("description").innerHTML=
-        data.weather[0].description.toUpperCase();
-
-        document.getElementById("feelsLike").innerHTML=
-        Math.round(data.main.feels_like)+"°C";
-
-        document.getElementById("humidity").innerHTML=
-        data.main.humidity+"%";
-
-        document.getElementById("wind").innerHTML=
-        data.wind.speed+" km/h";
-
-        document.getElementById("pressure").innerHTML=
-        data.main.pressure+" hPa";
-
-        document.getElementById("country").innerHTML=
-        data.sys.country;
-
-        document.getElementById("weatherIcon").src=
-        `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`;
-
-        const sunrise=new Date(data.sys.sunrise*1000);
-
-        const sunset=new Date(data.sys.sunset*1000);
-
-        document.getElementById("sunrise").innerHTML=
-        sunrise.toLocaleTimeString([],{
-            hour:'2-digit',
-            minute:'2-digit'
-        });
-
-        document.getElementById("sunset").innerHTML=
-        sunset.toLocaleTimeString([],{
-            hour:'2-digit',
-            minute:'2-digit'
-        });
-
+    if(confirm("Are you sure you want to delete all tasks?")){
+        taskList.innerHTML = "";
+        updateCount();
+        saveTasks();
     }
 
-    catch(error){
+});
 
-        console.log(error);
+function addTask(){
 
-        document.querySelector(".weather").style.display="none";
+    const text = taskInput.value.trim();
 
-        document.getElementById("error").style.display="block";
-
-        document.getElementById("error").innerHTML=
-        "Unable to fetch weather data.";
-
+    if(text === ""){
+        alert("Please enter a task.");
+        return;
     }
+
+    createTask(text,false);
+
+    taskInput.value = "";
+
+    saveTasks();
+
+    updateCount();
 
 }
 
-searchBtn.addEventListener("click",()=>{
+function createTask(text,completed){
 
-    if(cityInput.value.trim()==""){
+    const li = document.createElement("li");
 
-        alert("Please enter a city name.");
+    const taskDiv = document.createElement("div");
+    taskDiv.className = "task";
 
-        return;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = completed;
 
+    const span = document.createElement("span");
+    span.innerText = text;
+
+    if(completed){
+        span.classList.add("completed");
     }
 
-    getWeather(cityInput.value.trim());
+    checkbox.addEventListener("change",function(){
 
-});
+        span.classList.toggle("completed");
 
-cityInput.addEventListener("keyup",(e)=>{
+        saveTasks();
 
-    if(e.key==="Enter"){
+    });
 
-        searchBtn.click();
+    const deleteBtn = document.createElement("button");
 
-    }
+    deleteBtn.innerHTML = "Delete";
 
-});
+    deleteBtn.className = "delete-btn";
 
-// Default city
+    deleteBtn.onclick = function(){
 
-getWeather("Hyderabad");
+        li.remove();
+
+        updateCount();
+
+        saveTasks();
+
+    };
+
+    taskDiv.appendChild(checkbox);
+
+    taskDiv.appendChild(span);
+
+    li.appendChild(taskDiv);
+
+    li.appendChild(deleteBtn);
+
+    taskList.appendChild(li);
+
+}
+
+function updateCount(){
+
+    count.innerText = taskList.children.length;
+
+}
+
+function saveTasks(){
+
+    const tasks = [];
+
+    document.querySelectorAll("#taskList li").forEach(function(item){
+
+        tasks.push({
+
+            text: item.querySelector("span").innerText,
+
+            completed: item.querySelector("input").checked
+
+        });
+
+    });
+
+    localStorage.setItem("tasks",JSON.stringify(tasks));
+
+}
+
+function loadTasks(){
+
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    tasks.forEach(function(task){
+
+        createTask(task.text,task.completed);
+
+    });
+
+    updateCount();
+
+}
