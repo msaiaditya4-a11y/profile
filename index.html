@@ -4,10 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Weather App</title>
+<title>To-Do List App</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -20,127 +19,42 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 <div class="container">
 
-<div class="weather-card">
+<div class="todo-app">
 
 <h1>
-
-<i class="fa-solid fa-cloud-sun"></i>
-
-Weather App
-
+<i class="fa-solid fa-list-check"></i>
+To-Do List
 </h1>
 
-<div class="search-box">
+<div class="row">
 
 <input
 type="text"
-id="city"
-placeholder="Enter City Name">
+id="taskInput"
+placeholder="Add a new task...">
 
-<button id="searchBtn">
-
-<i class="fa-solid fa-magnifying-glass"></i>
-
+<button id="addBtn">
+Add
 </button>
 
 </div>
 
-<div class="weather">
+<ul id="taskList">
 
-<img
-id="weatherIcon"
-src=""
-alt="Weather Icon">
+<!-- Tasks will appear here -->
 
-<h2 id="temperature">--°C</h2>
+</ul>
 
-<h3 id="cityName">City Name</h3>
+<div class="bottom">
 
-<p id="description">
+<button id="clearBtn">
+Clear All
+</button>
 
-Weather Description
-
+<p>
+Total Tasks:
+<span id="count">0</span>
 </p>
-
-<div class="details">
-
-<div class="box">
-
-<i class="fa-solid fa-temperature-half"></i>
-
-<h4>Feels Like</h4>
-
-<p id="feelsLike">--°C</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-droplet"></i>
-
-<h4>Humidity</h4>
-
-<p id="humidity">--%</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-wind"></i>
-
-<h4>Wind</h4>
-
-<p id="wind">-- km/h</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-gauge-high"></i>
-
-<h4>Pressure</h4>
-
-<p id="pressure">-- hPa</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-flag"></i>
-
-<h4>Country</h4>
-
-<p id="country">--</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-sun"></i>
-
-<h4>Sunrise</h4>
-
-<p id="sunrise">--</p>
-
-</div>
-
-<div class="box">
-
-<i class="fa-solid fa-moon"></i>
-
-<h4>Sunset</h4>
-
-<p id="sunset">--</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="error" class="error">
-
-City not found.
 
 </div>
 
